@@ -8,7 +8,7 @@ import { NewPost } from '../models/new-post-model';
 })
 export class PostService {
   private http = inject(HttpClient);
-  private URL_ORIGIN: string = 'http://exserciselaravel.atwebpages.com/api/post';
+  private URL_ORIGIN: string = 'https://exserciselaravel.atwebpages.com/api/post';
 
   public getAllPosts(isTrashed: boolean = false): Observable<any[]> {
     return this.http.post<any[]>(`${this.URL_ORIGIN}/getAll`, { trashed: isTrashed });
