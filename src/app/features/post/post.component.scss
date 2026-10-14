@@ -1,0 +1,21 @@
+.post {
+    border: 2px solid #4F46E5;
+    border-radius: 10px;
+
+    .par1 {
+        .item {
+            img {
+                border: 1px solid #4F46E5;
+                border-radius: 10px;
+            }
+
+            h4 {
+                font-size: 15px;
+                background-color: #b3afff;
+                border-radius: 10px;
+                color: #4F46E5;
+                padding-block: 10px;
+            }
+        }
+    }
+}

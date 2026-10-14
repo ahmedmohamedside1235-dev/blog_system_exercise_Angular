@@ -1,0 +1,10 @@
+<div class="notification">
+    @if (notificationService.message(); as n) {
+    <div class="message">
+        <p class="alert {{n.type === 'error' ? 'api-error' : 'alert-success'}}">
+            <i [ngClass]="n.type === 'success' ? 'fa-solid fa-circle-check' : 'fa-solid fa-circle-xmark'"></i>
+            {{n.message}}
+        </p>
+    </div>
+    }
+</div>

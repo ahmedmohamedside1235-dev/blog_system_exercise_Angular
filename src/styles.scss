@@ -1,1 +1,130 @@
-/* You can add global styles to this file, and also import other style files */
+@use './app/shared/styles/mixins' as *;
+@use "bootstrap/scss/bootstrap";
+@use '@fortawesome/fontawesome-free/scss/fontawesome';
+@use '@fortawesome/fontawesome-free/scss/solid';
+@use '@fortawesome/fontawesome-free/scss/brands';
+@use '@fortawesome/fontawesome-free/scss/regular';
+
+nav.navbar {
+    padding-block: 20px;
+    box-shadow: 3px 6px 20px 0px #4F46E5;
+
+    .navbar-toggler {
+        border: 2px solid #4F46E5;
+        box-shadow: none;
+    }
+
+    .navbar-brand {
+        position: relative;
+        margin-left: 10px;
+        color: #0F172A;
+
+        span {
+            display: block;
+            background-color: #4F46E5;
+            width: 20px;
+            height: 20px;
+            border-radius: 100%;
+        }
+    }
+
+    .navbar-nav {
+        @include responsive(350) {
+            @include flex(center, center);
+            padding-block: 30px;
+        }
+
+        @include responsive(1050) {
+            @include flex(initial, initial);
+            padding-block: 0;
+        }
+
+        .nav-item {
+            .nav-link {
+                color: #000;
+                font-weight: 600;
+                font-size: 18px;
+
+                @include responsive(350) {
+                    padding-inline: 14px;
+                }
+
+                &.active {
+                    background-color: #c3d1fd;
+                    color: #4F46E5;
+                    border-radius: 8px;
+                }
+            }
+        }
+    }
+}
+
+
+
+.btn.add_anchor {
+    background-color: #4F46E5;
+    color: #fff;
+    font-weight: 600;
+    border: none;
+    box-shadow: none;
+    outline: none;
+
+    &:hover {
+        background-color: #4F46E5;
+        color: #fff;
+    }
+}
+
+.error-info {
+    .item {
+        background-color: #4F46E5;
+        color: #fff;
+        border-radius: 10px;
+
+        .error-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 100%;
+            background-color: #7d1313;
+            color: #FCA5A5;
+            @include flex(center, center);
+        }
+
+        button.btn {
+            background-color: #fff;
+            color: #000;
+            box-shadow: none;
+            outline: none;
+            border: none;
+        }
+    }
+}
+
+.modal-content {
+    border: 1px solid #4F46E5;
+}
+
+.api-error {
+    background-color: #FEE2E2;
+    border: 1px solid red;
+    color: red;
+    margin-block: 20px;
+    text-align: center;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    animation: errorSlideIn 0.25s ease;
+}
+
+@keyframes errorSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

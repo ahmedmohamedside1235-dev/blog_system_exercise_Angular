@@ -1,0 +1,34 @@
+form {
+    border-radius: 10px;
+    padding: 20px;
+
+    h3 {
+        padding-bottom: 20px;
+        border-bottom: 1px solid #b3afff;
+
+        i {
+            color: #4F46E5;
+        }
+    }
+
+    button.btn {
+        background-color: #4F46E5;
+        color: #fff;
+        font-weight: 600;
+
+        &:hover {
+            background-color: #4F46E5;
+            color: #fff;
+        }
+    }
+
+    input.form-control,
+    textarea.form-control {
+        border: 2px solid #4F46E5;
+        resize: none;
+
+        &:focus {
+            box-shadow: none;
+        }
+    }
+}

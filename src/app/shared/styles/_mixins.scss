@@ -1,0 +1,63 @@
+@mixin responsive($breakpoint) {
+    @if ($breakpoint ==350) {
+        @media (max-width: 1300px) {
+            @content;
+        }
+    }
+
+    @else if($breakpoint ==450) {
+        @media (min-width: 371px) and (max-width: 1300px) {
+            @content;
+        }
+    }
+
+    @else if($breakpoint ==650) {
+        @media (min-width: 576px) and (max-width: 1300px) {
+            @content;
+        }
+    }
+
+    @else if($breakpoint ==850) {
+        @media (min-width: 768px) and (max-width: 1300px) {
+            @content;
+        }
+    }
+
+    @else if($breakpoint ==1050) {
+        @media (min-width: 992px) and (max-width: 1300px) {
+            @content;
+        }
+    }
+
+    @else if($breakpoint ==1250) {
+        @media (min-width: 1181px) and (max-width: 1300px) {
+            @content;
+        }
+    }
+}
+
+@mixin createEle($w : 100%, $h : auto) {
+    content: "";
+    display: block;
+    @include area($w , $h);
+}
+
+@mixin flex($jc : initial, $ait : initial) {
+    display: flex;
+    justify-content: $jc;
+    align-items: $ait;
+}
+
+@mixin position($p: absolute, $t : initial, $r : initial, $b : initial, $l : initial, $z: initial) {
+    position: $p;
+    top: $t;
+    right: $r;
+    bottom: $b;
+    left: $l;
+    z-index: $z;
+}
+
+@mixin area($w: 100%, $h : initial) {
+    width: $w;
+    height: $h;
+}

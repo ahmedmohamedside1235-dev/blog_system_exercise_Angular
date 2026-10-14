@@ -1,0 +1,28 @@
+@for (i of [0, 1, 2, 3, 4, 5]; track i;) {
+<div class="loading p-4" [class.mb-4]="!$last">
+    <div class="row">
+        <div class="col-lg-2 part1">
+            <div class="item">
+                <div class="img-load mb-2 load"></div>
+                <div class="head-load mb-2 load"></div>
+            </div>
+        </div>
+        <div class="col-lg-10 part2">
+            <div class="item">
+                <div class="title-load mb-2 load"></div>
+                <div class="date-load mb-2 load"></div>
+                <div class="content-load mb-2 load"></div>
+                <div class="content2-load mb-2 load"></div>
+                @if (operations()) {
+                <div class="buttons-load mb-2 d-flex">
+                    <div class="btn1 load me-2"></div>
+                    <div class="btn1 load me-2"></div>
+                    <div class="btn1 load me-2"></div>
+                    <div class="btn1 load"></div>
+                </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+}

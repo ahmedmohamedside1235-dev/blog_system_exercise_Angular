@@ -1,0 +1,68 @@
+@use '../../../shared/styles/mixins' as *;
+
+@keyframes loading {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: .6;
+    }
+
+}
+
+.loading {
+    border: 1px solid #4F46E5;
+    border-radius: 10px;
+    animation: loading 1.4s ease-in-out infinite;
+
+    .load {
+        background-color: #91a9f6;
+        border: 1px solid #4F46E5;
+        border-radius: 10px;
+        opacity: 1;
+        animation: loading 1.4s ease-in-out infinite;
+    }
+
+    .part1 {
+        .item {
+
+            .img-load {
+                @include area(160px, 130px);
+            }
+
+            .head-load {
+                @include area(160px, 30px);
+            }
+
+        }
+    }
+
+    .part2 {
+        .item {
+            .title-load {
+                @include area(30%, 30px);
+            }
+
+            .date-load {
+                @include area(40%, 30px);
+            }
+
+            .content-load {
+                @include area(90%, 30px);
+            }
+
+            .content2-load {
+                @include area(45%, 30px);
+            }
+
+            .buttons-load {
+                .btn1 {
+                    @include area(20%, 30px);
+                }
+            }
+        }
+    }
+}
