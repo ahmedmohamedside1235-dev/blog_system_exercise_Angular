@@ -1,39 +1,74 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { NewPost } from '../models/new-post-model';
+import { inject, Injectable, signal } from '@angular/core';
+import { Subscription, tap } from 'rxjs';
+import { NewPost, Post } from '../models/new-post-model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PostService {
   private http = inject(HttpClient);
-  private URL_ORIGIN: string = 'https://exserciselaravel.atwebpages.com/api/post';
+  private readonly URL_ORIGIN = 'https://exserciselaravel.atwebpages.com/api/post';
+  private loadSub?: Subscription;
 
-  public getAllPosts(isTrashed: boolean = false): Observable<any[]> {
-    return this.http.post<any[]>(`${this.URL_ORIGIN}/getAll`, { trashed: isTrashed });
+  private _posts = signal<Post[]>([]);
+  public posts = this._posts.asReadonly();
+  public isLoading = signal<boolean>(true);
+  public isError = signal<boolean>(false);
+
+  // get posts from server
+  public load(trashed = false): void {
+    // cancel the previous request to avoid race conditions
+    this.loadSub?.unsubscribe();
+
+    this._posts.set([]);
+    this.isLoading.set(true);
+    this.isError.set(false);
+
+    this.loadSub = this.http.post<Post[]>(`${this.URL_ORIGIN}/getAll`, { trashed }).subscribe({
+      next: (data) => {
+        this._posts.set(data);
+        this.isLoading.set(false);
+      },
+      error: () => {
+        this.isLoading.set(false);
+        this.isError.set(true);
+      },
+    });
   }
 
   public addPost(post: NewPost) {
-    return this.http.post(`${this.URL_ORIGIN}/create`, post);
+    return this.http
+      .post<{ message: string; post: Post }>(`${this.URL_ORIGIN}/create`, post)
+      .pipe(tap((response) => this._posts.update((posts) => [response.post, ...posts])));
   }
 
-  public deletePost(postId: string) {
-    return this.http.delete(`${this.URL_ORIGIN}/delete`, { body: { id: postId } });
+  public updatePost(post: NewPost) {
+    return this.http
+      .post<{ post: Post }>(`${this.URL_ORIGIN}/update`, post)
+      .pipe(tap((response) => this.replacePost(response.post)));
   }
 
-  public forceDeletedPost(postId: string) {
-    return this.http.delete(`${this.URL_ORIGIN}/force_delete`, { body: { id: postId } });
+  // soft delete
+  public deletePost(post: Post) {
+    return this.http
+      .delete<{ post: Post }>(`${this.URL_ORIGIN}/delete`, { body: { id: post.id } })
+      .pipe(tap((response) => this.replacePost(response.post)));
   }
 
-  public restoredPost(postId: string) {
-    return this.http.post(`${this.URL_ORIGIN}/restore`, { id: postId });
+  public restorePost(post: Post) {
+    return this.http
+      .post<{ post: Post }>(`${this.URL_ORIGIN}/restore`, { id: post.id })
+      .pipe(tap((response) => this.replacePost(response.post)));
   }
 
-  public updatedPost(post: NewPost) {
-    return this.http.post(`${this.URL_ORIGIN}/update`, post);
+  public forceDeletePost(post: Post) {
+    return this.http
+      .delete(`${this.URL_ORIGIN}/force_delete`, { body: { id: post.id } })
+      .pipe(tap(() => this._posts.update((posts) => posts.filter((p) => p.id !== post.id))));
   }
-  public getPost(postId: string) {
-    return this.http.post(`${this.URL_ORIGIN}/getPost`, { id: postId });
+
+  private replacePost(updated: Post): void {
+    this._posts.update((posts) => posts.map((p) => (p.id === updated.id ? updated : p)));
   }
 }

@@ -1,50 +1,98 @@
-<form method="POST" (submit)="addPost(form,cancelBtn)" #form="ngForm">
-    <h3 class="text-center mb-4"><i class="fa-solid fa-folder-plus"></i> {{isEditForm() ? 'Edit' : 'Add New'}} Post</h3>
-    <div class="mb-3">
-        <label for="Author" class="form-label">Author</label>
-        <input type="text" [disabled]="isEditForm() && (postData() === null)"
-            [class.is-invalid]="author_name.touched && !isValidAuthor()"
-            [class.is-valid]="author_name.touched && isValidAuthor()" ngModel (ngModelChange)="validateAuthor($event)"
-            #author_name="ngModel" class="form-control" id="Author" name="author_name">
-        @if (!author_name.value && author_name.touched) {
-        <p class="api-error mt-3"><i class="fa-solid fa-circle-exclamation me-1"></i>Author name is required</p>
-        }
-        @else if (author_name.touched && !isValidAuthor()) {
-        <p class="api-error mt-3"><i class="fa-solid fa-circle-exclamation me-1"></i>Each word must be at least 3
-            letters long (up to 3 words)</p>
-        }
-
-    </div>
-    <div class="mb-3">
-        <label for="Title" class="form-label">Title</label>
-        <input type="text" [disabled]="isEditForm() && (postData() === null)"
-            [class.is-invalid]="title.touched && !isValidTitle()" [value]=""
-            [class.is-valid]="title.touched && isValidTitle()" ngModel (ngModelChange)="validateTitle($event)"
-            #title="ngModel" class="form-control" id="Title" name="title">
-        @if (!title.value && title.touched) {
-        <p class="api-error mt-3"><i class="fa-solid fa-circle-exclamation me-1"></i>The Title is required</p>
-        }
-        @else if (title.dirty && !isValidTitle()) {
-        <p class="api-error mt-3"><i class="fa-solid fa-circle-exclamation me-1"></i>Each word must be at least 3
-            letters long</p>
-        }
-    </div>
-    <div class="mb-3">
-        <label for="Body" class="form-label">Body</label>
-        <textarea [disabled]="isEditForm() && (postData() === null)" rows="10" class="form-control" id="Body"
-            name="body" [class.is-invalid]="body.touched && !isValidBody()"
-            [class.is-valid]="body.touched && isValidBody()" ngModel (ngModelChange)="validateBody($event)"
-            #body="ngModel">
-        </textarea>
-        @if (body.touched && !isValidBody()) {
-        <p class="api-error mt-3">
-            <i class="fa-solid fa-circle-exclamation me-1"></i>{{ bodyError(body.value) }}
-        </p>
-        }
-    </div>
-    <button type="submit" class="btn add_anchor me-2" (click)="addPost(form,cancelBtn)" [disabled]="!isValidForm()">
-        {{(isEditForm() ? 'Edit post' : 'Add post')}}
-    </button>
-    <button type="button" class="btn add_anchor" #cancelBtn data-bs-dismiss="modal" (click)="resetForm(form);"
-        [disabled]="isEditForm() && (postData() === null)">Cancel</button>
+<form method="POST" (submit)="submitForm(form, cancelBtn)" #form="ngForm">
+  <h3 class="text-center mb-4">
+    <i class="fa-solid fa-folder-plus"></i>
+    {{ isEditForm() ? 'Edit' : 'Add New' }} Post
+  </h3>
+  <div class="mb-3">
+    <label for="Author" class="form-label">Author</label>
+    <input
+      type="text"
+      [disabled]="isEditForm() && postData() === null"
+      [class.is-invalid]="author_name.touched && !isValidAuthor()"
+      [class.is-valid]="author_name.touched && isValidAuthor()"
+      ngModel
+      (ngModelChange)="validateAuthor($event)"
+      #author_name="ngModel"
+      class="form-control"
+      id="Author"
+      name="author_name"
+    />
+    @if (!author_name.value && author_name.touched) {
+      <p class="api-error mt-3">
+        <i class="fa-solid fa-circle-exclamation me-1"></i>Author name is
+        required
+      </p>
+    } @else if (author_name.touched && !isValidAuthor()) {
+      <p class="api-error mt-3">
+        <i class="fa-solid fa-circle-exclamation me-1"></i>Each word must be at
+        least 3 letters long (up to 3 words)
+      </p>
+    }
+  </div>
+  <div class="mb-3">
+    <label for="Title" class="form-label">Title</label>
+    <input
+      type="text"
+      [disabled]="isEditForm() && postData() === null"
+      [class.is-invalid]="title.touched && !isValidTitle()"
+      [value]=""
+      [class.is-valid]="title.touched && isValidTitle()"
+      ngModel
+      (ngModelChange)="validateTitle($event)"
+      #title="ngModel"
+      class="form-control"
+      id="Title"
+      name="title"
+    />
+    @if (!title.value && title.touched) {
+      <p class="api-error mt-3">
+        <i class="fa-solid fa-circle-exclamation me-1"></i>The Title is required
+      </p>
+    } @else if (title.dirty && !isValidTitle()) {
+      <p class="api-error mt-3">
+        <i class="fa-solid fa-circle-exclamation me-1"></i>Each word must be at
+        least 3 letters long
+      </p>
+    }
+  </div>
+  <div class="mb-3">
+    <label for="Body" class="form-label">Body</label>
+    <textarea
+      [disabled]="isEditForm() && postData() === null"
+      rows="10"
+      class="form-control"
+      id="Body"
+      name="body"
+      [class.is-invalid]="body.touched && !isValidBody()"
+      [class.is-valid]="body.touched && isValidBody()"
+      ngModel
+      (ngModelChange)="validateBody($event)"
+      #body="ngModel"
+    >
+    </textarea>
+    @if (body.touched && !isValidBody()) {
+      <p class="api-error mt-3">
+        <i class="fa-solid fa-circle-exclamation me-1"></i
+        >{{ bodyError(body.value) }}
+      </p>
+    }
+  </div>
+  <button
+    type="submit"
+    class="btn add_anchor me-2"
+    (click)="submitForm(form, cancelBtn)"
+    [disabled]="!isValidForm()"
+  >
+    {{ isEditForm() ? 'Edit post' : 'Add post' }}
+  </button>
+  <button
+    type="button"
+    class="btn add_anchor"
+    #cancelBtn
+    data-bs-dismiss="modal"
+    (click)="resetForm(form)"
+    [disabled]="isEditForm() && postData() === null"
+  >
+    Cancel
+  </button>
 </form>

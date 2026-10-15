@@ -5,66 +5,13 @@
       <p class="mb-0">Manage your posts</p>
     </div>
     <div class="add_post">
-      <button class="btn add_anchor" data-bs-toggle="modal" data-bs-target="#AddPost">+ New Post</button>
+      <button class="btn add_anchor" data-bs-toggle="modal" data-bs-target="#AddPost">
+        + New Post
+      </button>
     </div>
   </div>
 
-  <div class="container mt-5">
-    @if (isLoaded()) {
-    <app-loading-post [operations]="true"></app-loading-post>
-    } @else if (isError()) {
-    <div class="error-info w-100 d-flex justify-content-center align-items-center">
-      <div class="item p-4 text-center d-flex justify-content-center align-items-center flex-column">
-        <div class="error-icon mb-3">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M12 9v4M12 17h.01"></path>
-            <path d="M10.3 3.9L1.8 18a2 2 0 001.7 3h17a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"></path>
-          </svg>
-        </div>
-        <h4>Something went wrong</h4>
-        <p>
-          We could not load the posts. Check your connection and try again.
-        </p>
-        <button class="btn" (click)="reloadDataPost();">
-          <i class="fa-solid fa-rotate-right"></i>
-          Try again
-        </button>
-      </div>
-    </div>
-    }@else if (posts().length > 0) {
-
-    @for (post of posts(); track post.id) {
-    <app-post [post]="post" [operation]="true" [class.hide]="waitingUpdatePost()"
-      (postDeletedOrRestore)="onPostUpdated($event )" (postForceDeleted)="onPostForceDeleted($event)"
-      (editRequested)="onEditRequested($event)" [isDisabled]="waitingUpdatePost()"></app-post>
-    }
-
-    }
-  </div>
-</div>
-
-<!-- add post Modal -->
-<div class="modal fade" id="AddPost" tabindex="-1" aria-labelledby="AddPostLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header border-0 p-2">
-        <button type="button" class="btn-close " data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <app-addOrUpdate-post (addedPostInDashboard)="onPostAdded($event)" [isEditForm]="false"></app-addOrUpdate-post>
-    </div>
-  </div>
-</div>
-
-<!-- edit post Modal -->
-<div class="modal fade" id="EditPost" tabindex="-1" aria-labelledby="EditPostLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header border-0 p-2">
-        <button type="button" class="btn-close " data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <app-addOrUpdate-post [isEditForm]="true" [postData]="editingPost()" (editPostInDashboard)="onPostEdited($event)"
-        (modalClosed)="editingPost.set(null)"></app-addOrUpdate-post>
-    </div>
+  <div class="mt-5">
+    <app-posts [isTrashed]="true"></app-posts>
   </div>
 </div>

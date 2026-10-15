@@ -1,0 +1,88 @@
+import { Component, inject, input, signal } from '@angular/core';
+import { PostService } from '../../core/services/post.service';
+import { LoadingPostComponent } from '../../shared/components/loading-post/loading-post.component';
+import { NotificationService } from '../../core/services/notification.service';
+import { NewPost, Post } from '../../core/models/new-post-model';
+import { PostComponent } from './post/post.component';
+import { AddOrUpdatePostComponent } from '../../shared/components/add-post/addOrUpdate-post.component';
+import { Observable } from 'rxjs';
+
+@Component({
+  selector: 'app-posts',
+  imports: [LoadingPostComponent, PostComponent, AddOrUpdatePostComponent],
+  templateUrl: './posts.component.html',
+  styleUrl: './posts.component.scss',
+})
+export class PostsComponent {
+
+  public postService = inject(PostService);
+  public notification = inject(NotificationService);
+
+  public isRequested = signal<boolean>(false);
+  public postDataForm = signal<Post | null>(null);
+  public pendingId = signal<string | null>(null);
+  public isTrashed = input<boolean>(false);
+
+  public ngOnInit() {
+    this.postService.load(this.isTrashed());
+  }
+
+  public reloadDataPost() {
+    this.postService.load(this.isTrashed());
+  }
+
+
+  // soft delete post
+  public deletePost(post: Post) {
+    this.run(this.postService.deletePost(post), 'Wait to delete your post', `The Post has been deleted successfully.`, post.id);
+  }
+
+  // restore post after soft delete
+  public restorePost(post: Post) {
+    this.run(this.postService.restorePost(post), 'Wait to restore your post', `The Post has been restored successfully.`, post.id);
+  }
+
+  // force delete post
+  public forceDeletePost(post: Post) {
+    this.run(this.postService.forceDeletePost(post), 'Wait to force delete your post', `The Post has been force delete successfully.`, post.id);
+  }
+
+  // edit post
+  public editPost(post: any) {
+    this.run(this.postService.updatePost(post), 'Wait to update your post', `The Post has been updated successfully.`, post.id);
+  }
+
+  // add post
+  public addPost(post: NewPost) {
+    this.run(this.postService.addPost(post), 'Wait to add post your post', `The Post has been added successfully.`);
+  }
+
+  // send post data to component addOrUpdate-post
+  public insertPostIntoForm(post: Post) {
+    this.postDataForm.set(post);
+  }
+
+  private run<T>(request$: Observable<T>, waitMsg: string, successMsg: string, postId: string | null = null) {
+    if (this.isRequested()) return;
+    this.isRequested.set(true);
+    this.pendingId.set(postId);
+    this.notification.show(waitMsg);
+
+    request$.subscribe({
+      next: () => {
+        this.notification.show(successMsg);
+        this.isRequested.set(false);
+        this.pendingId.set(null);
+      },
+
+      error: (err) => {
+        this.isRequested.set(false);
+        this.pendingId.set(null);
+        this.notification.show(err.error?.message ?? 'Something went wrong, please try again', 'error')
+      },
+
+    });
+  }
+}
+
+

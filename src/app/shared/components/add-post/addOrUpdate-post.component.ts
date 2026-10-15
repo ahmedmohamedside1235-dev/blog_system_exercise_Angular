@@ -20,8 +20,8 @@ export class AddOrUpdatePostComponent implements OnInit {
   public isValidTitle = signal<boolean>(false);
   public isValidBody = signal<boolean>(false);
 
-  public addedPostInDashboard = output<NewPost>();
-  public editPostInDashboard = output<any>();
+  public addPost = output<NewPost>();
+  public editPost = output<NewPost>();
   public modalClosed = output<boolean>();
 
   public isEditForm = input<boolean>(false);
@@ -124,7 +124,7 @@ export class AddOrUpdatePostComponent implements OnInit {
   }
 
   // add post
-  public addPost(form: NgForm, cancelBtn: HTMLButtonElement) {
+  public submitForm(form: NgForm, cancelBtn: HTMLButtonElement) {
     if (!this.isValidForm()) {
       this.checkValidation(form);
       return;
@@ -154,13 +154,11 @@ export class AddOrUpdatePostComponent implements OnInit {
       }
 
       post.id = original?.id;
-      this.editPostInDashboard.emit(post);
-      this.notificationService.show('Wait to edit your post', 'success');
+      this.editPost.emit(post);
       return;
     }
 
-    this.addedPostInDashboard.emit(post);
-    this.notificationService.show('Wait to add your post', 'success');
+    this.addPost.emit(post);
   }
 
 
