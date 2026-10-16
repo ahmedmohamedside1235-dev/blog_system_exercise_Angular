@@ -21,7 +21,7 @@ export class AddOrUpdatePostComponent implements OnInit {
   public isValidBody = signal<boolean>(false);
 
   public addPost = output<NewPost>();
-  public editPost = output<NewPost>();
+  public editPost = output<NewPost & { id: string }>();
   public modalClosed = output<boolean>();
 
   public isEditForm = input<boolean>(false);
@@ -153,8 +153,7 @@ export class AddOrUpdatePostComponent implements OnInit {
         return;
       }
 
-      post.id = original?.id;
-      this.editPost.emit(post);
+      this.editPost.emit({ ...post, id: original.id });
       return;
     }
 

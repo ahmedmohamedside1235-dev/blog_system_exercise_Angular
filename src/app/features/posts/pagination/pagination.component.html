@@ -1,0 +1,19 @@
+<nav>
+    <ul class="pagination justify-content-center">
+        <li class="page-item" [class.disabled]="postService.currentPage() === 1">
+            <button class="page-link" [disabled]="postService.currentPage() === 1"
+                (click)="goTo(postService.currentPage() - 1)">previous</button>
+        </li>
+
+        @for (page of pages(); track page) {
+        <li class="page-item" [class.active]="page === postService.currentPage()">
+            <button class="page-link" (click)="goTo(page)">{{ page }}</button>
+        </li>
+        }
+
+        <li class="page-item" [class.disabled]="postService.currentPage() === postService.totalPage()">
+            <button class="page-link" [disabled]="postService.currentPage() === postService.totalPage()"
+                (click)="goTo(postService.currentPage() + 1)">Next</button>
+        </li>
+    </ul>
+</nav>

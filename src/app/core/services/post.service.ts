@@ -8,26 +8,35 @@ import { NewPost, Post } from '../models/new-post-model';
 })
 export class PostService {
   private http = inject(HttpClient);
+
   private readonly URL_ORIGIN = 'https://exserciselaravel.atwebpages.com/api/post';
   private loadSub?: Subscription;
 
   private _posts = signal<Post[]>([]);
-  public posts = this._posts.asReadonly();
   public isLoading = signal<boolean>(true);
   public isError = signal<boolean>(false);
 
+  public totalPage = signal<number>(0);
+  public currentPage = signal<number>(1);
+
+  public posts = this._posts.asReadonly();
+
   // get posts from server
-  public load(trashed = false): void {
+  public load(trashed = false, page: number = 1): void {
+
     // cancel the previous request to avoid race conditions
     this.loadSub?.unsubscribe();
 
     this._posts.set([]);
     this.isLoading.set(true);
     this.isError.set(false);
+    this.currentPage.set(page);
 
-    this.loadSub = this.http.post<Post[]>(`${this.URL_ORIGIN}/getAll`, { trashed }).subscribe({
-      next: (data) => {
-        this._posts.set(data);
+    this.loadSub = this.http.post<{ data: Post[], current_page: number, last_page: number }>(`${this.URL_ORIGIN}/getAll?page=${page}`, { trashed }).subscribe({
+      next: (response) => {
+        this._posts.set(response.data);
+        this.currentPage.set(response.current_page);
+        this.totalPage.set(response.last_page);
         this.isLoading.set(false);
       },
       error: () => {
@@ -43,7 +52,7 @@ export class PostService {
       .pipe(tap((response) => this._posts.update((posts) => [response.post, ...posts])));
   }
 
-  public updatePost(post: NewPost) {
+  public updatePost(post: NewPost & { id: string }) {
     return this.http
       .post<{ post: Post }>(`${this.URL_ORIGIN}/update`, post)
       .pipe(tap((response) => this.replacePost(response.post)));

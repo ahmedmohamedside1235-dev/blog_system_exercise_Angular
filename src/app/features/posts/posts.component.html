@@ -29,6 +29,10 @@
 
 }
 
+@if (postService.totalPage() > 1) {
+<app-pagination (paginatePost)="paginatePost($event)" [requestDoneOrError]="paginateIsDone()"></app-pagination>
+}
+
 @if(isTrashed()){
 <!-- edit post Modal -->
 <div class="modal fade" id="EditPost" tabindex="-1" aria-labelledby="EditPostLabel" aria-hidden="true">
