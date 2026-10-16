@@ -54,7 +54,6 @@ export class PostsComponent {
     this.run(this.postService.forceDeletePost(post), 'Wait to force delete your post', `The Post has been force delete successfully.`, post.id, () => {
       this.postService.load(this.isTrashed(), 1);
     });
-    this.postService.load(this.isTrashed(), 1);
   }
 
   // edit post
