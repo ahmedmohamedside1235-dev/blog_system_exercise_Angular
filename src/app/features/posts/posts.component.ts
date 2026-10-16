@@ -51,7 +51,9 @@ export class PostsComponent {
 
   // force delete post
   public forceDeletePost(post: Post) {
-    this.run(this.postService.forceDeletePost(post), 'Wait to force delete your post', `The Post has been force delete successfully.`, post.id);
+    this.run(this.postService.forceDeletePost(post), 'Wait to force delete your post', `The Post has been force delete successfully.`, post.id, () => {
+      this.postService.load(this.isTrashed(), 1);
+    });
     this.postService.load(this.isTrashed(), 1);
   }
 
@@ -62,8 +64,9 @@ export class PostsComponent {
 
   // add post
   public addPost(post: NewPost) {
-    this.run(this.postService.addPost(post), 'Wait to add post your post', `The Post has been added successfully.`);
-    this.postService.load(this.isTrashed(), 1);
+    this.run(this.postService.addPost(post), 'Wait to add post your post', `The Post has been added successfully.`, null, () => {
+      this.postService.load(this.isTrashed(), 1);
+    });
   }
 
   // send post data to component addOrUpdate-post
@@ -71,7 +74,7 @@ export class PostsComponent {
     this.postDataForm.set(post);
   }
 
-  private run<T>(request$: Observable<T>, waitMsg: string, successMsg: string, postId: string | null = null) {
+  private run<T>(request$: Observable<T>, waitMsg: string, successMsg: string, postId: string | null = null, onSuccess?: () => void) {
     if (this.isRequested()) return;
     this.isRequested.set(true);
     this.pendingId.set(postId);
@@ -82,6 +85,7 @@ export class PostsComponent {
         this.notification.show(successMsg);
         this.isRequested.set(false);
         this.pendingId.set(null);
+        onSuccess?.();
       },
 
       error: (err) => {
