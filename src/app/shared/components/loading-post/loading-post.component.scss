@@ -26,8 +26,28 @@
         animation: loading 1.4s ease-in-out infinite;
     }
 
+    @include responsive(350) {
+        max-width: 340px;
+        margin: auto;
+    }
+
+    @include responsive(850) {
+        max-width: initial;
+        margin: initial;
+    }
+
     .part1 {
         .item {
+
+            @include responsive(350) {
+                width: 200px;
+                margin: auto;
+            }
+
+            // @include responsive(850) {
+            //     width: initial;
+            //     margin: initial;
+            // }
 
             .img-load {
                 @include area(160px, 130px);
@@ -61,6 +81,31 @@
             .buttons-load {
                 .btn1 {
                     @include area(20%, 30px);
+                }
+            }
+        }
+    }
+
+    @include responsive(350) {
+        .part2 {
+            .item {
+                margin-top: 15px;
+
+                button {
+                    font-size: 12px;
+                }
+            }
+        }
+    }
+
+    @include responsive(1050) {
+        .part2 {
+            .item {
+                margin-top: 0;
+                margin-left: 30px;
+
+                button {
+                    font-size: initial;
                 }
             }
         }

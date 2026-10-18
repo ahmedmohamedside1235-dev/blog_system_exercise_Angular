@@ -1,9 +1,31 @@
+@use '../../../shared/styles/mixins' as *;
+
 .post {
     border: 2px solid #4F46E5;
     border-radius: 10px;
 
+    @include responsive(350) {
+        max-width: 340px;
+        margin: auto;
+    }
+
+    @include responsive(850) {
+        max-width: initial;
+        margin: auto;
+    }
+
     .par1 {
         .item {
+            @include responsive(350) {
+                width: 200px;
+                margin: auto;
+            }
+
+            @include responsive(850) {
+                width: initial;
+                margin: initial;
+            }
+
             img {
                 border: 1px solid #4F46E5;
                 border-radius: 10px;
@@ -15,6 +37,30 @@
                 border-radius: 10px;
                 color: #4F46E5;
                 padding-block: 10px;
+            }
+        }
+    }
+
+    @include responsive(350) {
+        .part2 {
+            .item {
+                margin-top: 15px;
+
+                button {
+                    font-size: 12px;
+                }
+            }
+        }
+    }
+
+    @include responsive(850) {
+        .part2 {
+            .item {
+                margin-top: 0;
+
+                button {
+                    font-size: initial;
+                }
             }
         }
     }
